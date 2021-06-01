@@ -9,10 +9,36 @@ npx create-react-app my-app
 npx create-react-app folder/my-app
 ```
 
+```
+npx create-react-app my-app --template typescript
+```
+
 Updating to next Channels
 
 ```
 npm update react@next react-dom@next
+```
+
+### Production Build of the App
+
+```
+npm run build
+```
+
+**Recommended**
+
+```
+npm install --save-dev terser-brunch
+```
+
+```
+brunch build -p
+```
+
+**Browserify**
+
+```
+npm install --save-dev envify terser uglifyify
 ```
 
 ### Package Manager
@@ -1276,4 +1302,377 @@ const FancyButton = React.forwardRef((props, ref) => (
 // You can now get a ref directly to the DOM button:
 const ref = React.createRef();
 <FancyButton ref={ref}>Click me!</FancyButton>;
+```
+
+### Higher Ordered Component
+
+Take a Component and returns a new one
+
+### Measuring Rendering Cost using `Profiler`
+
+```
+render(
+  <App>
+    <Profiler id="Panel" onRender={callback}>
+      <Panel {...props}>
+        <Profiler id="Content" onRender={callback}>
+          <Content {...props} />
+        </Profiler>
+        <Profiler id="PreviewPane" onRender={callback}>
+          <PreviewPane {...props} />
+        </Profiler>
+      </Panel>
+    </Profiler>
+  </App>
+);
+```
+
+```
+function onRenderCallback(
+  id, // the "id" prop of the Profiler tree that has just committed
+  phase, // either "mount" (if the tree just mounted) or "update" (if it re-rendered)
+  actualDuration, // time spent rendering the committed update
+  baseDuration, // estimated time to render the entire subtree without memoization
+  startTime, // when React began rendering this update
+  commitTime, // when React committed this update
+  interactions // the Set of interactions belonging to this update
+) {
+  // Aggregate or log render timings...
+}
+```
+
+### Render Prop
+
+```
+<DataProvider render={data => (
+  <h1>Hello {data.target}</h1>
+)}/>
+```
+
+```
+<Mouse>
+  {mouse => (
+    <p>The mouse position is {mouse.x}, {mouse.y}</p>
+  )}
+</Mouse>
+```
+
+```
+<Mouse children={mouse => (
+  <p>The mouse position is {mouse.x}, {mouse.y}</p>
+)}/>
+```
+
+### Proptypes
+
+```
+import PropTypes from 'prop-types';
+
+class Greeting extends React.Component {
+  render() {
+    return (
+      <h1>Hello, {this.props.name}</h1>
+    );
+  }
+}
+
+Greeting.propTypes = {
+  name: PropTypes.string
+};
+```
+
+```
+optionalUnion: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Message)
+  ])
+```
+
+```
+optionalArrayOf: PropTypes.arrayOf(PropTypes.number),
+```
+
+```
+optionalObjectOf: PropTypes.objectOf(PropTypes.number)
+```
+
+```
+optionalObjectWithStrictShape: PropTypes.exact({
+    name: PropTypes.string,
+    quantity: PropTypes.number
+  })
+```
+
+```
+requiredFunc: PropTypes.func.isRequired
+```
+
+```
+optionalNode: PropTypes.node
+optionalElement: PropTypes.element
+optionalElementType: PropTypes.elementType
+optionalMessage: PropTypes.instanceOf(Message)
+optionalEnum: PropTypes.oneOf(['News', 'Photos'])
+```
+
+```
+MyComponent.propTypes = {
+  children: PropTypes.element.isRequired
+};
+```
+
+**Default Props Bodies**
+
+```
+class Greeting extends React.Component {
+  render() {
+    return (
+      <h1>Hello, {this.props.name}</h1>
+    );
+  }
+}
+
+// Specifies the default values for props:
+Greeting.defaultProps = {
+  name: 'Stranger'
+};
+
+// Renders "Hello, Stranger":
+ReactDOM.render(
+  <Greeting />,
+  document.getElementById('example')
+);
+```
+
+### Un-Controlled Component
+
+Uses References to handle
+
+```
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.input = React.createRef();
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.input.current.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" ref={this.input} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+
+### Default Input Value
+
+```
+<input
+          defaultValue="Bob"
+          type="text"
+          ref={this.input} />
+```
+
+### Hook
+
+- UseState
+
+```
+import React, { useState } from 'react';
+
+function Example() {
+  // Declare a new state variable, which we'll call "count"
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+```
+const [state, setState] = useState(() => {
+  const initialState = someExpensiveComputation(props);
+  return initialState;
+});
+
+```
+
+- UseEffect
+
+```
+import React, { useState, useEffect } from 'react';
+
+function Example() {
+  const [count, setCount] = useState(0);
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+**Cleaning Up**
+
+```
+useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  });
+```
+
+- UseContext
+
+- UseRef
+
+- UseCallback
+
+```
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);
+```
+
+- UseMemo
+
+```
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+
+- UseLayoutEffect
+
+- UseReducer
+
+```
+const initialState = {count: 0};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    default:
+      throw new Error();
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <>
+      Count: {state.count}
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
+}
+```
+
+**Lazy Initialization**
+
+```
+function init(initialCount) {
+  return {count: initialCount};
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    case 'reset':
+      return init(action.payload);
+    default:
+      throw new Error();
+  }
+}
+
+function Counter({initialCount}) {
+  const [state, dispatch] = useReducer(reducer, initialCount, init);
+  return (
+    <>
+      Count: {state.count}
+      <button
+        onClick={() => dispatch({type: 'reset', payload: initialCount})}>
+        Reset
+      </button>
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
+}
+
+```
+
+**Custom Hooks**
+
+```
+import React, { useState, useEffect } from 'react';
+
+function useFriendStatus(friendID) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+
+  useEffect(() => {
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  });
+
+  return isOnline;
+}
+```
+
+```
+function FriendStatus(props) {
+  const isOnline = useFriendStatus(props.friend.id);
+
+  if (isOnline === null) {
+    return 'Loading...';
+  }
+  return isOnline ? 'Online' : 'Offline';
+}
 ```
