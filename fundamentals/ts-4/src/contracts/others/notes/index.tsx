@@ -31,11 +31,3 @@ export interface I_NotesProps extends I_NotesActions, I_NotesStore {
   heading: string
   notes: T_Note[]
 }
-
-/**
- * Notes Component Rules
- */
-
-// export type I_NotesComponent<T> = React.FC & {
-//   title: string
-// }
