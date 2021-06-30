@@ -91,8 +91,10 @@ const mapStateToProps = (state: AppState): I_NotesStore => ({
   notes: state.notes.notes,
 })
 
-const mapDispatchToProps = (dispatch: Dispatch): I_NotesActions => ({
-  addNote: (note: T_Note) => AddNote(dispatch, note),
-})
+const mapDispatchToProps = (dispatch: Dispatch): I_NotesActions => {
+  return {
+    addNote: (note: T_Note) => AddNote(dispatch, note),
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notes)

@@ -1,6 +1,6 @@
 import * as ActionTypes from './../../actionTypes/index'
 import { T_StoreActionResponse } from './../../../contracts/base/index'
-import { Dispatch, Action } from 'redux'
+import { Dispatch } from 'redux'
 import { T_Note } from '../../../contracts/others/notes'
 
 export const AddNote = (

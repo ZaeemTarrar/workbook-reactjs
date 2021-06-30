@@ -1,5 +1,5 @@
 import * as ActionTypes from '../../actionTypes/index'
-import { Action, Reducer } from 'redux'
+import { Reducer } from 'redux'
 import { I_NotesStore } from '../../../contracts/others/notes/index'
 import { T_StoreActionResponse } from './../../../contracts/base/index'
 
