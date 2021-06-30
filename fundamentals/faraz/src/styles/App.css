@@ -1,0 +1,36 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: Comic Sans MS;
+}
+
+.theme {
+	background-color: #369 !important;
+	color: #fff !important;
+}
+
+.theme-inverse {
+	color: #369 !important;
+	background-color: #fff !important;
+}
+
+.pad-10 {
+	padding: 10px;
+}
+
+.pad-20 {
+	padding: 20px;
+}
+
+.mt-10 {
+	margin-top: 10px;
+}
+
+.mt-20 {
+	margin-top: 20px;
+}
+
+a {
+	text-decoration: none !important;
+	color: black;
+}
